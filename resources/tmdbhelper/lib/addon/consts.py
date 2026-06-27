@@ -39,15 +39,15 @@ TMDB_PARAMS_EPISODES = {
     'season': '{season_number}',
     'episode': '{episode_number}'}
 
-IMAGEPATH_ORIGINAL = 'https://image.tmdb.org/t/p/original'
-IMAGEPATH_LARGEFANART = 'https://image.tmdb.org/t/p/w1280'
-IAMGEPATH_SMALLFANART = 'https://image.tmdb.org/t/p/w780'
-IMAGEPATH_LARGEPOSTER = 'https://image.tmdb.org/t/p/w780'
-IMAGEPATH_BASICPOSTER = 'https://image.tmdb.org/t/p/w500'
-IMAGEPATH_SMALLPOSTER = 'https://image.tmdb.org/t/p/w342'
-IMAGEPATH_LARGELOGO = 'https://image.tmdb.org/t/p/w500'
-IMAGEPATH_SMALLLOGO = 'https://image.tmdb.org/t/p/w300'
-IMAGEPATH_NEGATE = 'https://image.tmdb.org/t/p/h100_filter(negate,000,666)'
+IMAGEPATH_ORIGINAL = 'https://images.tmdb.org/t/p/original'
+IMAGEPATH_LARGEFANART = 'https://images.tmdb.org/t/p/w1280'
+IAMGEPATH_SMALLFANART = 'https://images.tmdb.org/t/p/w780'
+IMAGEPATH_LARGEPOSTER = 'https://images.tmdb.org/t/p/w780'
+IMAGEPATH_BASICPOSTER = 'https://images.tmdb.org/t/p/w500'
+IMAGEPATH_SMALLPOSTER = 'https://images.tmdb.org/t/p/w342'
+IMAGEPATH_LARGELOGO = 'https://images.tmdb.org/t/p/w500'
+IMAGEPATH_SMALLLOGO = 'https://images.tmdb.org/t/p/w300'
+IMAGEPATH_NEGATE = 'https://images.tmdb.org/t/p/h100_filter(negate,000,666)'
 IMAGEPATH_QUALITY_POSTER = (IMAGEPATH_LARGEPOSTER, IMAGEPATH_BASICPOSTER, IMAGEPATH_BASICPOSTER, IMAGEPATH_SMALLPOSTER, IMAGEPATH_ORIGINAL)
 IMAGEPATH_QUALITY_FANART = (IMAGEPATH_ORIGINAL, IMAGEPATH_LARGEFANART, IMAGEPATH_LARGEFANART, IAMGEPATH_SMALLFANART, IMAGEPATH_ORIGINAL)
 IMAGEPATH_QUALITY_THUMBS = (IMAGEPATH_ORIGINAL, IMAGEPATH_LARGEFANART, IAMGEPATH_SMALLFANART, IAMGEPATH_SMALLFANART, IMAGEPATH_ORIGINAL)
