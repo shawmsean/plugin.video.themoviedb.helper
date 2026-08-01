@@ -8,6 +8,8 @@ class Router():
         self.handle = handle  # plugin:// handle
         self.paramstring, *secondary_params = paramstring.split('&&')  # plugin://plugin.video.themoviedb.helper?paramstring
         self.params = reconfigure_legacy_params(**parse_paramstring(self.paramstring))  # paramstring dictionary
+        if not self.params.get('info') and self.params.get('action'):
+            self.params['info'] = self.params['action']
         self.params.update(self.configure_paths(secondary_params))
 
     def configure_paths(self, secondary_params):
