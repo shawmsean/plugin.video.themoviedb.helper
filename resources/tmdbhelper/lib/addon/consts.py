@@ -120,6 +120,27 @@ ROUTE_NOID = {
     'discover': {'route': {
         'module_name': 'tmdbhelper.lib.items.directories.tmdb.lists_discover',
         'import_attr': 'ListDiscover'}},
+    'filter_categories': {'route': {
+        'module_name': 'tmdbhelper.lib.items.directories.tmdb.lists_filterbrowse',
+        'import_attr': 'ListFilterCategories'}},
+    'filter_genres': {'route': {
+        'module_name': 'tmdbhelper.lib.items.directories.tmdb.lists_filterbrowse',
+        'import_attr': 'ListFilterGenres'}},
+    'filter_regions': {'route': {
+        'module_name': 'tmdbhelper.lib.items.directories.tmdb.lists_filterbrowse',
+        'import_attr': 'ListFilterRegions'}},
+    'filter_years': {'route': {
+        'module_name': 'tmdbhelper.lib.items.directories.tmdb.lists_filterbrowse',
+        'import_attr': 'ListFilterYears'}},
+    'filter_sorts': {'route': {
+        'module_name': 'tmdbhelper.lib.items.directories.tmdb.lists_filterbrowse',
+        'import_attr': 'ListFilterSorts'}},
+    'filter_platforms': {'route': {
+        'module_name': 'tmdbhelper.lib.items.directories.tmdb.lists_filterbrowse',
+        'import_attr': 'ListFilterPlatforms'}},
+    'filter_list': {'route': {
+        'module_name': 'tmdbhelper.lib.items.directories.tmdb.lists_filterbrowse',
+        'import_attr': 'ListFilterList'}},
     'user_discover': {'route': {
         'module_name': 'tmdbhelper.lib.items.directories.tmdb.lists_discodir',
         'import_attr': 'ListUserDiscover'}},
