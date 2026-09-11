@@ -664,6 +664,14 @@ class _Episode(_Video):
         self.label = super().finalise_label()
         return self.label
 
+    def finalise_params_details(self):
+        super().finalise_params_details()
+        if self.season is not None:
+            self.params['season'] = self.season
+        if self.episode is not None:
+            self.params['episode'] = self.episode
+        return self.params
+
     def get_context_menu_choosedefault_params(self):
         params = super().get_context_menu_choosedefault_params()
         params.extend([
