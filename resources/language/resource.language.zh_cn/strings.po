@@ -2628,6 +2628,11 @@ msgid "Use alternative TMDb API url"
 msgstr "使用备用 TMDb API 网址"
 
 #: /resources/settings.xml
+msgctxt "#32541"
+msgid "Custom TMDb API url (e.g. https://my-proxy.example.com)"
+msgstr "自定义 TMDb API 网址（如 https://my-proxy.example.com）"
+
+#: /resources/settings.xml
 msgctxt "#32514"
 msgid "Add to MDbList list"
 msgstr "添加到 MDbList 列表"

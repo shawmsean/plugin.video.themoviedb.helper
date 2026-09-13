@@ -5,7 +5,10 @@ from tmdbhelper.lib.api.api_keys.tmdb import API_KEY
 from jurialmunkey.ftools import cached_property
 
 
-API_URL = 'https://api.themoviedb.org/3' if not get_setting('use_alternate_api_url') else 'https://api.tmdb.org/3'
+_API_BASE = (get_setting('custom_api_url') or '').rstrip('/')
+API_URL = _API_BASE + '/3' if _API_BASE else ('https://api.tmdb.org/3' if get_setting('use_alternate_api_url') else 'https://api.themoviedb.org/3')
+API_URL_V4 = _API_BASE + '/4' if _API_BASE else 'https://api.themoviedb.org/4'
+API_URL_BASE = _API_BASE if _API_BASE else 'https://api.themoviedb.org'
 
 
 class TMDbAPI(NoCacheRequestAPI):

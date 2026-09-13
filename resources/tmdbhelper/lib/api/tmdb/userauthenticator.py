@@ -1,9 +1,10 @@
 from tmdbhelper.lib.api.api_keys.tmdb import USER_TOKEN, API_READ_ACCESS_TOKEN
+from tmdbhelper.lib.api.tmdb.api import API_URL_V4
 from jurialmunkey.ftools import cached_property
 from tmdbhelper.lib.addon.logger import kodi_log
 
 
-API_URL = 'https://api.themoviedb.org/4'
+API_URL = API_URL_V4
 
 
 class TMDbUserAuthenticator():

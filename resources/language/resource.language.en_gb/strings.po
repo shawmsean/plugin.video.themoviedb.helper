@@ -2606,6 +2606,11 @@ msgid "Use alternative TMDb API url"
 msgstr ""
 
 #: /resources/settings.xml
+msgctxt "#32541"
+msgid "Custom TMDb API url (e.g. https://my-proxy.example.com)"
+msgstr ""
+
+#: /resources/settings.xml
 msgctxt "#32514"
 msgid "Add to MDbList list"
 msgstr ""

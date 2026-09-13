@@ -981,6 +981,13 @@
                     <default>False</default>
                     <control type="toggle"/>
                 </setting>
+                <setting id="custom_api_url" type="string" label="32541">
+                    <level>0</level>
+                    <default></default>
+                    <control type="edit" format="string">
+                        <heading>32541</heading>
+                    </control>
+                </setting>
                 <setting id="max_threads" type="integer" label="32410" help="">
                     <level>0</level>
                     <default>0</default>
