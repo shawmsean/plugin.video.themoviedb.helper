@@ -5,8 +5,22 @@ from tmdbhelper.lib.api.api_keys.tmdb import API_KEY
 from jurialmunkey.ftools import cached_property
 
 
-_API_BASE = (get_setting('custom_api_url') or '').rstrip('/')
-API_URL = _API_BASE + '/3' if _API_BASE else ('https://api.tmdb.org/3' if get_setting('use_alternate_api_url') else 'https://api.themoviedb.org/3')
+def _get_custom_api_base():
+    try:
+        return (get_setting('custom_api_url') or '').rstrip('/')
+    except (TypeError, ValueError):
+        return ''
+
+
+def _get_alternate_api_url():
+    try:
+        return get_setting('use_alternate_api_url')
+    except (TypeError, ValueError):
+        return False
+
+
+_API_BASE = _get_custom_api_base()
+API_URL = _API_BASE + '/3' if _API_BASE else ('https://api.tmdb.org/3' if _get_alternate_api_url() else 'https://api.themoviedb.org/3')
 API_URL_V4 = _API_BASE + '/4' if _API_BASE else 'https://api.themoviedb.org/4'
 API_URL_BASE = _API_BASE if _API_BASE else 'https://api.themoviedb.org'
 

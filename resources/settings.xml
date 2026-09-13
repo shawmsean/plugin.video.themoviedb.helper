@@ -984,6 +984,9 @@
                 <setting id="custom_api_url" type="string" label="32541">
                     <level>0</level>
                     <default></default>
+                    <constraints>
+                        <allowempty>true</allowempty>
+                    </constraints>
                     <control type="edit" format="string">
                         <heading>32541</heading>
                     </control>
