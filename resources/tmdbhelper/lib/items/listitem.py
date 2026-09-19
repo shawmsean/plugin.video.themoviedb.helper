@@ -321,7 +321,7 @@ class _ListItem(object):
 class _NextPage(_ListItem):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.label = get_localized(33078)
+        self.label = ''
         self.params = self.init_params((kwargs.get('parent_params') or {}).copy())
         self.path = PLUGINPATH
         self.is_folder = True
@@ -329,11 +329,11 @@ class _NextPage(_ListItem):
     def finalise_infoproperties(self):
         super().finalise_infoproperties()
         self.infoproperties['specialsort'] = 'bottom'
+        self.infoproperties['is_trigger'] = '1'
+        self.infoproperties['next_page'] = self.url
         return self.infoproperties
 
     def finalise_art(self):
-        self.art['icon'] = f'{ADDONPATH}/resources/icons/themoviedb/nextpage.png'
-        self.art['landscape'] = f'{ADDONPATH}/resources/icons/themoviedb/nextpage_wide.png'
         return self.art
 
     def finalise_params(self):

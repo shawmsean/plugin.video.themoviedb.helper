@@ -1,4 +1,4 @@
-from jurialmunkey.parser import boolean
+from jurialmunkey.parser import boolean, try_int
 from jurialmunkey.ftools import cached_property
 from tmdbhelper.lib.addon.consts import NO_UNAIRED_LABEL
 from tmdbhelper.lib.addon.plugin import get_setting, executebuiltin, get_localized
@@ -163,6 +163,76 @@ class ContainerDirectoryCommon(CommonContainerAPIs):
         with TimerList(self.timer_lists, '--dirs', log_threshold=0.001, logging=self.log_timers):
             from xbmcplugin import addDirectoryItems
             addDirectoryItems(self.handle, items)
+        for idx, (_url, listitem, _is_folder) in enumerate(items):
+            if listitem.getProperty('is_trigger') == '1':
+                from xbmcgui import Window
+                Window(10000).setProperty('bili_trigger_index', str(idx))
+                break
+
+    @cached_property
+    def infinite_scroll_cache_key(self):
+        import hashlib
+        base_params = {k: v for k, v in self.params.items() if k != 'page'}
+        key_str = '&'.join(f'{k}={v}' for k, v in sorted(base_params.items()))
+        return hashlib.md5(key_str.encode('utf-8')).hexdigest()
+
+    def _read_scroll_cache(self):
+        try:
+            import json
+            import xbmcvfs
+            from tmdbhelper.lib.files.futils import get_write_path, make_path
+            cache_dir = get_write_path('infinite_scroll', True)
+            make_path(cache_dir)
+            cache_path = cache_dir + self.infinite_scroll_cache_key + '.json'
+            if not xbmcvfs.exists(cache_path):
+                return None
+            with xbmcvfs.File(cache_path, 'r') as f:
+                return json.load(f)
+        except Exception:
+            return None
+
+    def _write_scroll_cache(self, items):
+        try:
+            import json
+            import xbmcvfs
+            from tmdbhelper.lib.files.futils import get_write_path, make_path
+            cache_dir = get_write_path('infinite_scroll', True)
+            make_path(cache_dir)
+            cache_path = cache_dir + self.infinite_scroll_cache_key + '.json'
+            with xbmcvfs.File(cache_path, 'w') as f:
+                json.dump(items, f)
+        except Exception:
+            pass
+
+    def accumulate_items(self, items):
+        page = try_int(self.params.get('page', '1')) or 1
+        real_items = []
+        next_page_items = []
+        for item in items:
+            if isinstance(item, dict) and 'next_page' in item and len(item) == 1:
+                next_page_items.append(item)
+            else:
+                real_items.append(item)
+        if page <= 1:
+            self._write_scroll_cache(real_items)
+            return items
+        cached_items = self._read_scroll_cache()
+        if not cached_items:
+            self._write_scroll_cache(real_items)
+            return items
+        import json
+        seen = set()
+        combined = []
+        for item in cached_items + real_items:
+            try:
+                fingerprint = json.dumps(item, sort_keys=True, default=str)
+            except Exception:
+                fingerprint = str(item)
+            if fingerprint not in seen:
+                seen.add(fingerprint)
+                combined.append(item)
+        self._write_scroll_cache(combined)
+        return combined + next_page_items
 
     def set_mixed_content(self, response):
         lengths = [
@@ -246,6 +316,8 @@ class ContainerDirectoryCommon(CommonContainerAPIs):
 
             if not items:
                 return
+
+            items = self.accumulate_items(items)
 
             if not build_items:
                 return items
