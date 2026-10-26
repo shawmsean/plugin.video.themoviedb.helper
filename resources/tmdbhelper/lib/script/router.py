@@ -64,10 +64,12 @@ class Script(object):
             lambda **kwargs: importmodule('tmdbhelper.lib.script.method.trakt', 'delete_list')(**kwargs),
         'rename_list':
             lambda **kwargs: importmodule('tmdbhelper.lib.script.method.trakt', 'rename_list')(**kwargs),
+        'sync_options':
+            lambda **kwargs: importmodule('tmdbhelper.lib.script.method.sync', 'sync_item')(**kwargs),
         'sync_trakt':
             lambda **kwargs: importmodule('tmdbhelper.lib.script.method.sync', 'sync_item')(**kwargs),
         'sort_list':
-            lambda **kwargs: importmodule('tmdbhelper.lib.script.method.trakt', 'sort_list')(**kwargs),
+            lambda **kwargs: importmodule('tmdbhelper.lib.script.method.lists', 'sort_list')(**kwargs),
         'sort_mdblist':
             lambda **kwargs: importmodule('tmdbhelper.lib.script.method.mdblist', 'sort_mdblist')(**kwargs),
         'invalidate_sync':
@@ -96,6 +98,10 @@ class Script(object):
             lambda **kwargs: importmodule('tmdbhelper.lib.script.method.image_functions', 'genre_fanart')(**kwargs),
 
         # User Configuration
+        'select_sync_provider':
+            lambda **kwargs: importmodule('tmdbhelper.lib.script.method.sync_provider', 'select_sync_provider')(**kwargs),
+        'install_sync_provider':
+            lambda **kwargs: importmodule('tmdbhelper.lib.script.method.sync_provider', 'install_sync_provider')(**kwargs),
         'provider_allowlist':
             lambda **kwargs: importmodule('tmdbhelper.lib.script.method.settings', 'configure_provider_allowlist')(),
 

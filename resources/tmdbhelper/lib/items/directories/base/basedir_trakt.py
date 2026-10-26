@@ -3,7 +3,13 @@ from jurialmunkey.ftools import cached_property
 from tmdbhelper.lib.addon.plugin import get_localized
 
 
-class BaseDirItemTraktFavorites(BaseDirItemAuthorised):
+class BaseDirItemTraktAuthorised(BaseDirItemAuthorised):
+    def get_authorisation(self):
+        from tmdbhelper.lib.api.trakt.auth import TraktAuthorisation
+        return TraktAuthorisation()
+
+
+class BaseDirItemTraktFavorites(BaseDirItemTraktAuthorised):
     priority = 110
     label_type = 'reversed'
     label_localized = 1036
@@ -14,36 +20,7 @@ class BaseDirItemTraktFavorites(BaseDirItemAuthorised):
     group = 1036
 
 
-class BaseDirItemTraktMostWatched(BaseDirItemAuthorised):
-    priority = 160
-    label_localized = 32195
-    types = ('movie', 'tv', 'episode', )
-    params = {'info': 'trakt_mostwatched'}
-    art_icon = 'resources/icons/trakt/mostwatched.png'
-    group = 32195
-
-
-class BaseDirItemTraktToWatch(BaseDirItemAuthorised):
-    priority = 210
-    label_type = 'reversed'
-    label_localized = 32078
-    types = ('movie', 'tv', )
-    params = {'info': 'trakt_towatch'}
-    art_icon = 'resources/icons/trakt/watchlist.png'
-    group = 32196
-
-
-class BaseDirItemTraktDropped(BaseDirItemAuthorised):
-    priority = 230
-    label_type = 'localize'
-    label_localized = 32048
-    types = ('tv', )
-    params = {'info': 'trakt_dropped'}
-    art_icon = 'resources/icons/trakt/inprogress.png'
-    group = 32196
-
-
-class BaseDirItemTraktRecommendations(BaseDirItemAuthorised):
+class BaseDirItemTraktRecommendations(BaseDirItemTraktAuthorised):
     priority = 240
     label_type = 'reversed'
     label_localized = 32198
@@ -53,25 +30,7 @@ class BaseDirItemTraktRecommendations(BaseDirItemAuthorised):
     group = 32223
 
 
-class BaseDirItemTraktBecauseYouWatched(BaseDirItemAuthorised):
-    priority = 250
-    label_localized = 32199
-    types = ('movie', 'tv', )
-    params = {'info': 'trakt_becauseyouwatched'}
-    art_icon = 'resources/icons/trakt/recommended.png'
-    group = 32223
-
-
-class BaseDirItemTraktBecauseMostWatched(BaseDirItemAuthorised):
-    priority = 260
-    label_localized = 32200
-    types = ('movie', 'tv', )
-    params = {'info': 'trakt_becausemostwatched'}
-    art_icon = 'resources/icons/trakt/recommended.png'
-    group = 32223
-
-
-class BaseDirItemTraktMyAiring(BaseDirItemAuthorised):
+class BaseDirItemTraktMyAiring(BaseDirItemTraktAuthorised):
     priority = 270
     types = ('tv', )
     params = {'info': 'trakt_myairing'}
@@ -95,17 +54,7 @@ class BaseDirItemTraktMyAiring(BaseDirItemAuthorised):
         return get_localized(32202)
 
 
-class BaseDirItemTraktAiringNext(BaseDirItemAuthorised):
-    priority = 280
-    label_type = 'localize'
-    label_localized = 32459
-    types = ('tv', )
-    params = {'info': 'trakt_airingnext'}
-    art_icon = 'resources/icons/trakt/calendar.png'
-    group = 32203
-
-
-class BaseDirItemTraktCalendarDir(BaseDirItemAuthorised):
+class BaseDirItemTraktCalendarDir(BaseDirItemTraktAuthorised):
     priority = 290
     types = ('tv', )
     params = {'info': 'dir_calendar_trakt'}
@@ -518,7 +467,7 @@ class BaseDirItemTraktPopularLists(BaseDirItem):
     group = 32159
 
 
-class BaseDirItemTraktLikedLists(BaseDirItemAuthorised):
+class BaseDirItemTraktLikedLists(BaseDirItemTraktAuthorised):
     priority = 630
     label_type = 'localize'
     label_localized = 32210
@@ -528,7 +477,7 @@ class BaseDirItemTraktLikedLists(BaseDirItemAuthorised):
     group = 32159
 
 
-class BaseDirItemTraktMyLists(BaseDirItemAuthorised):
+class BaseDirItemTraktMyLists(BaseDirItemTraktAuthorised):
     priority = 640
     label_type = 'localize'
     label_localized = 32211
@@ -565,4 +514,4 @@ class BaseDirItemTraktAuthenticate(BaseDirItem):
 
 def get_all_trakt_class_instances():
     from tmdbhelper.lib.addon.module import get_all_module_class_objects_by_priority
-    return [clobj() for clobj in get_all_module_class_objects_by_priority(__name__)]
+    return [clobj() for clobj in get_all_module_class_objects_by_priority(__name__) if clobj is not BaseDirItemTraktAuthorised]
