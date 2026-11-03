@@ -161,6 +161,7 @@ class PlayerItem():
                 item_type='episode',
                 season=self.season,
                 episode=self.episode,
+                imdb_id=self.imdb_id,
             )
         return self.infolabel_uniqueid_tmdb
 
@@ -253,7 +254,9 @@ class PlayerMonitor(Player, CommonMonitorFunctions):
         if not self.scrobbler:
             return
         self.scrobbler_update()
-        self.scrobbler.start(self.tmdb_type, self.tmdb_id)
+        self.scrobbler.start(
+            self.tmdb_type, self.tmdb_id,
+            paused=get_condvisibility("Player.Paused"))
 
     def scrobbler_pause(self):
         if not self.scrobbler:
@@ -453,6 +456,6 @@ class PlayerMonitor(Player, CommonMonitorFunctions):
         # Update our properties
         self.set_properties(self.details)
 
-        # Start the selected scrobbler after any resume seek.
+        # Start the selected scrobblers after any resume seek.
         self.wait_for_seek(10)
         self.scrobbler_start()

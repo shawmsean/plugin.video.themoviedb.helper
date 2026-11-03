@@ -1,5 +1,6 @@
 from tmdbhelper.lib.items.directories.base.basedir_item import BaseDirItemAuthorised
 from tmdbhelper.lib.items.directories.base.item_sync_builder import BaseDirSyncItemBuilder
+from tmdbhelper.lib.items.directories.base.item_currentlywatching_builder import BaseDirCurrentlyWatchingItemBuilder
 from jurialmunkey.ftools import cached_property
 from tmdbhelper.lib.addon.plugin import get_localized
 from tmdbhelper.lib.sync.providers.selection import SyncProviderSetting
@@ -27,7 +28,7 @@ class BaseDirItemCollection(BaseDirItemSync):
     label_localized = 32192
     label_type = 'reversed'
     params = {'info': 'sync_collection'}
-    art_icon = '/resources/icons/sync/collection.png'
+    art_icon = 'resources/icons/sync/collection.png'
     sync_capability = 'collection'
     sorting = True
     types = ('movie', 'tv', 'both')
@@ -51,6 +52,7 @@ class BaseDirItemWatchListReleased(BaseDirItemWatchlist):
     label_type = 'reversed'
     label_localized = 32456
     params = {'info': 'sync_watchlist_released'}
+    art_icon = 'resources/icons/sync/watchlist-released.png'
     group = 32193
 
 
@@ -59,6 +61,7 @@ class BaseDirItemWatchListAnticipated(BaseDirItemWatchlist):
     label_type = 'reversed'
     label_localized = 32457
     params = {'info': 'sync_watchlist_anticipated'}
+    art_icon = 'resources/icons/sync/watchlist-anticipated.png'
     group = 32193
 
 
@@ -69,7 +72,7 @@ class BaseDirItemHistory(BaseDirItemSync):
     sorting = True
     types = ('movie', 'tv', 'episode', 'both', )
     params = {'info': 'sync_history'}
-    art_icon = 'resources/icons/sync/inprogress.png'
+    art_icon = 'resources/icons/sync/recentlywatched.png'
     group = 32194
 
 
@@ -113,7 +116,7 @@ class BaseDirItemToWatch(BaseDirItemSync):
     types = ('movie', 'tv', )
     sync_capabilities = ('watched', 'watchlist')
     params = {'info': 'sync_towatch'}
-    art_icon = 'resources/icons/sync/watchlist.png'
+    art_icon = 'resources/icons/sync/towatch.png'
     group = 32196
 
 
@@ -123,8 +126,33 @@ class BaseDirItemNextEpisodes(BaseDirItemOnDeckMovies):
     label_localized = 32197
     types = ('tv', )
     params = {'info': 'sync_nextepisodes'}
-    art_icon = 'resources/icons/sync/inprogress.png'
+    art_icon = 'resources/icons/sync/up-next.png'
     group = 32196
+
+
+class BaseDirItemCurrentlyWatching(BaseDirItemNextEpisodes):
+    priority = 225
+    label_type = 'standard'
+    label_localized = 32600
+    types = ('movie', 'tv', )
+    params = {'info': 'sync_currentlywatching'}
+    sorting = False
+    art_icon = 'resources/icons/sync/currentlywatching.png'
+    item_builder = BaseDirCurrentlyWatchingItemBuilder
+
+
+class BaseDirItemNextMovies(BaseDirItemNextEpisodes):
+    priority = 221
+    label_localized = 32602
+    types = ('movie', )
+    params = {'info': 'sync_nextmovies'}
+    sorting = False
+
+
+class BaseDirItemCurrentlyWatchingMixed(BaseDirItemCurrentlyWatching):
+    priority = 226
+    types = ('both', )
+    art_icon = 'resources/icons/sync/currentlywatching-both.png'
 
 
 class BaseDirItemOnDeckUnWatchedEpisodes(BaseDirItemOnDeckMovies):
@@ -157,7 +185,7 @@ class BaseDirItemDropped(BaseDirItemSync):
     label_localized = 32048
     types = ('tv', )
     params = {'info': 'sync_dropped'}
-    art_icon = 'resources/icons/sync/inprogress.png'
+    art_icon = 'resources/icons/sync/dropped.png'
     group = 32196
 
 
@@ -175,7 +203,7 @@ class BaseDirItemBecauseMostWatched(BaseDirItemSync):
     label_localized = 32200
     types = ('movie', 'tv', )
     params = {'info': 'sync_becausemostwatched'}
-    art_icon = 'resources/icons/sync/recommended.png'
+    art_icon = 'resources/icons/sync/recommended-mostwatched.png'
     group = 32223
 
 
