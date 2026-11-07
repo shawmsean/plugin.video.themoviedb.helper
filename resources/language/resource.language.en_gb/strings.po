@@ -1754,7 +1754,7 @@ msgstr ""
 
 #: /resources/settings.xml
 msgctxt "#32395"
-msgid "Directory timings"
+msgid "Timer reports"
 msgstr ""
 
 #: /resources/settings.xml
@@ -3260,7 +3260,7 @@ msgstr ""
 
 #: /resources/settings.xml
 msgctxt "#32697"
-msgid "Log the time taken to build directories."
+msgid "Disabled collects no timer reports. Basic collects directory timer reports. Detailed also collects item detail timer reports."
 msgstr ""
 
 #: /resources/settings.xml
@@ -3536,4 +3536,29 @@ msgstr ""
 #: /resources/settings.xml
 msgctxt "#32755"
 msgid "Choose the resolution of TMDb fanart, landscape, and extra fanart, or use the default image quality setting."
+msgstr ""
+
+#: /resources/settings.xml
+msgctxt "#32756"
+msgid "TMDb account"
+msgstr ""
+
+#: /resources/settings.xml
+msgctxt "#32757"
+msgid "Sign in to your TMDb account using a web browser or QR code."
+msgstr ""
+
+#: /resources/settings.xml
+msgctxt "#32758"
+msgid "Sign out of your TMDb account and remove the saved authentication token."
+msgstr ""
+
+#: /resources/settings.xml
+msgctxt "#32759"
+msgid "Basic"
+msgstr ""
+
+#: /resources/settings.xml
+msgctxt "#32760"
+msgid "Detailed"
 msgstr ""

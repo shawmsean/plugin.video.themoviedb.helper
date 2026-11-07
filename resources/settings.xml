@@ -806,8 +806,27 @@
                     <enable>false</enable>
                 </setting>
             </group>
-            <group id="5" label="32728">
-                <visible>false</visible>
+            <group id="5" label="32756">
+                <setting id="authenticate_tmdb" type="action" label="32010" help="32757">
+                    <level>0</level>
+                    <dependencies>
+                        <dependency type="visible" operator="is" setting="tmdb_user_token"></dependency>
+                    </dependencies>
+                    <control type="button" format="action">
+                        <close>true</close>
+                        <data>RunScript(plugin.video.themoviedb.helper,authenticate_tmdb,return_settings=true)</data>
+                    </control>
+                </setting>
+                <setting id="revoke_tmdb" type="action" label="32169" help="32758">
+                    <level>0</level>
+                    <dependencies>
+                        <dependency type="visible" operator="!is" setting="tmdb_user_token"></dependency>
+                    </dependencies>
+                    <control type="button" format="action">
+                        <close>true</close>
+                        <data>RunScript(plugin.video.themoviedb.helper,revoke_tmdb,return_settings=true)</data>
+                    </control>
+                </setting>
                 <setting id="tmdb_user_token" type="string" label="32011" help="32701">
                     <level>0</level>
                     <default/>
@@ -1091,10 +1110,17 @@
                     <default>False</default>
                     <control type="toggle"/>
                 </setting>
-                <setting id="timer_reports" type="boolean" label="32395" help="32697">
+                <setting id="timer_reports" type="integer" label="32395" help="32697">
                     <level>0</level>
-                    <default>False</default>
-                    <control type="toggle"/>
+                    <default>0</default>
+                    <constraints>
+                        <options>
+                            <option label="32585">0</option>
+                            <option label="32759">1</option>
+                            <option label="32760">2</option>
+                        </options>
+                    </constraints>
+                    <control type="spinner" format="string"/>
                 </setting>
                 <setting id="log_request_tmdb" type="action" label="32348" help="32698">
                     <level>0</level>
