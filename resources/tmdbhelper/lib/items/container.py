@@ -35,6 +35,18 @@ class ContainerDirectoryCommon(CommonContainerAPIs):
         return {}
 
     @cached_property
+    def timer_report_time(self):
+        return self.get_timer_report_time()
+
+    def get_timer_report_time(self):
+        from tmdbhelper.lib.addon.tmdate import get_current_date_time
+        return get_current_date_time('%H:%M')
+
+    @property
+    def timer_report_name(self):
+        return f'[{self.timer_report_time}] {self.paramstring}'
+
+    @cached_property
     def sort_methods(self):
         return []  # List of kwargs dictionaries [{'sortMethod': SORT_METHOD_UNSORTED}]
 
@@ -56,6 +68,11 @@ class ContainerDirectoryCommon(CommonContainerAPIs):
     @cached_property
     def is_widget(self):
         return boolean(self.params.get('widget', False))
+
+    @cached_property
+    def is_plugin_widget(self):
+        # Internal callers, such as the recommendations window, build lists without a plugin handle.
+        return self.is_widget and self.handle != -1
 
     @cached_property
     def is_cacheonly(self):
@@ -103,6 +120,10 @@ class ContainerDirectoryCommon(CommonContainerAPIs):
         return True
 
     @cached_property
+    def is_labelformatting(self):
+        return boolean(self.params.get('labelformatting', True))
+
+    @cached_property
     def format_unaired_labels(self):
         return self.parent_params.get('info') not in NO_UNAIRED_LABEL
 
@@ -126,14 +147,27 @@ class ContainerDirectoryCommon(CommonContainerAPIs):
 
     @cached_property
     def action_discovery(self):
-        return self.get_action_discovery()
+        with TimerList(self.timer_lists, '--disc', log_threshold=0, logging=self.log_timers):
+            return self.get_action_discovery()
 
     def get_action_discovery(self):
         from tmdbhelper.lib.script.actions.discovery import ActionDiscovery
         return ActionDiscovery(self.sync_playdata.syncdata)
 
+    @cached_property
+    def context_menu_config(self):
+        with TimerList(self.timer_lists, '--menu', log_threshold=0, logging=self.log_timers):
+            return self.get_context_menu_config()
+
+    def get_context_menu_config(self):
+        from tmdbhelper.lib.items.context import ContextMenuConfig
+        config = ContextMenuConfig(self)
+        config.items  # Read the settings once for the whole list
+        return config
+
     def get_item_finaliser(self, li):
-        li.action_discovery = self.action_discovery
+        # Items use action discovery only through the shared context menu config.
+        li.context_menu_config = self.context_menu_config
         return self.item_finaliser(self, li)
 
     def make_item(self, li):
@@ -317,11 +351,34 @@ class ContainerDirectoryCommon(CommonContainerAPIs):
         """
         return
 
+    def refresh_after_finish(self):
+        """ Abstract method to refresh data after the directory is returned to Kodi
+        """
+        return
+
+    @cached_property
+    def directory_items_properties_class(self):
+        return self.get_directory_items_properties_class()
+
+    def get_directory_items_properties_class(self):
+        if not boolean(self.params.get('nextepisodes', False)):
+            return
+        from tmdbhelper.lib.items.directories.lists_nextepisodes import ListNextEpisodesProperties
+        return ListNextEpisodesProperties
+
     def get_directory_items(self):
         with TimerList(self.timer_lists, 'get_list', logging=self.log_timers):
-            return self.get_items(**self.params)
+            items = self.get_items(**self.params)
+            if self.directory_items_properties_class is None:
+                return items
+            list_properties = self.directory_items_properties_class(items, self.container_content)
+            self.container_content = list_properties.container_content
+            return list_properties.finalised_items
 
     def get_directory(self, items_only=False, build_items=True):
+
+        if self.log_timers:
+            self.timer_report_time  # Record when the directory began its work
 
         with TimerList(self.timer_lists, 'total', logging=self.log_timers):
             self.prepare_item_details()
@@ -348,9 +405,9 @@ class ContainerDirectoryCommon(CommonContainerAPIs):
 
         if self.log_timers:
             from tmdbhelper.lib.files.futils import write_to_file
-            from tmdbhelper.lib.addon.logger import log_timer_report
+            from tmdbhelper.lib.addon.logger import log_timer_report, TimerReportLists
             from tmdbhelper.lib.addon.tmdate import get_todays_date
-            report_data = log_timer_report(self.timer_lists, self.paramstring, logging=False)
+            report_data = log_timer_report(TimerReportLists(self.timer_lists).timer_lists, self.timer_report_name, logging=False)
             write_to_file(''.join(report_data), 'timer_report', f'{get_todays_date()}.txt', join_addon_data=True, append_to_file=True)
 
         if self.container_update:
@@ -358,6 +415,8 @@ class ContainerDirectoryCommon(CommonContainerAPIs):
 
         if self.container_refresh:
             executebuiltin('Container.Refresh')
+
+        self.refresh_after_finish()
 
 
 class ContainerDirectory(ContainerDirectoryCommon):
@@ -420,9 +479,22 @@ class ContainerDirectory(ContainerDirectoryCommon):
 
     def build_detailed_items(self, items):
         with TimerList(self.timer_lists, '--lidc', log_threshold=0.001, logging=self.log_timers):
-            items = self.lidc.configure_listitems_threaded(items)
+            items = self.get_configured_listitems(items)
             items = self.build_ratings_items(items)
-            return [i for i in (self.build_detailed_item(li) for li in items if li) if i]
+            items = [i for i in (self.build_detailed_item(li) for li in items if li) if i]
+        self.add_details_rest_timer()
+        return items
+
+    def get_configured_listitems(self, items):
+        items = self.lidc.configure_listitems_threaded(items)
+        for name, seconds in self.lidc.client.timings.items():
+            self.timer_lists[f' --{name}'] = [seconds]
+        return items
+
+    def add_details_rest_timer(self):
+        """Report the --lidc time that the item detail timings do not account for, never below 0."""
+        lidc_time = sum(self.timer_lists['--lidc'])
+        self.timer_lists[' --rest'] = [max(lidc_time - sum(self.lidc.client.timings.values()), 0)]
 
 
 class ContainerDefaultCacheDirectory(ContainerDirectory):
